@@ -2,6 +2,7 @@ const express = require('express')
 const sequelize = require('./database/sequelize-connect')
 const authRoutes = require('./routes/auth.route')
 const userRoutes = require('./routes/user.route')
+const homeRoutes = require('./routes/home.route')
 const cookieParser = require('cookie-parser')
 const path = require('path')
 
@@ -14,12 +15,9 @@ app.use(cookieParser());
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
-app.get('/', async (req, res) =>{
-    res.send({"message" : "wellcome"})
-})
-
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
+app.use('/', homeRoutes)
 
 app.listen(port, async() => {
     try {

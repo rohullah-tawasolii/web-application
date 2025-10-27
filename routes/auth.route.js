@@ -104,7 +104,7 @@ router.post('/register', async (req, res) => {
         email, 
         password
       });
-      res.render('register', { "success": "User registered successfully!" });
+      res.redirect("/auth/login")
     }
   } catch (error) {
     console.error('Registration error:', error);
