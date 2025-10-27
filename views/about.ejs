@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Us - My Blog</title>
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet"
+  >
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #f8f9fa !important;
+    }
+    
+    .main-content {
+      flex: 1;
+    }
+    
+    .about-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 0;
+      margin-bottom: 50px;
+    }
+    
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    
+    .feature-icon i {
+      font-size: 24px;
+      color: white;
+    }
+    
+    .team-member {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .team-member img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 4px solid #667eea;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Include Header -->
+  <%- include('header') %>
+
+  <!-- Hero Section -->
+  <section class="about-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-8 mx-auto text-center">
+          <h1 class="display-4 fw-bold mb-4">About Our Blog</h1>
+          <p class="lead mb-4">Welcome to My Blog - your trusted source for insightful articles, latest trends, and valuable knowledge across various topics.</p>
+          <p class="mb-0">We're committed to delivering high-quality content that inspires, educates, and entertains our readers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Our Mission -->
+      <div class="row mb-5">
+        <div class="col-lg-10 mx-auto">
+          <div class="card shadow-sm border-0">
+            <div class="card-body p-5">
+              <h2 class="fw-bold text-center mb-4">Our Mission</h2>
+              <p class="lead text-center text-muted mb-4">
+                To create a platform where knowledge meets inspiration, and where every reader can find something valuable.
+              </p>
+              <div class="row">
+                <div class="col-md-6">
+                  <p>We believe in the power of sharing knowledge and experiences. Our blog is dedicated to providing well-researched, engaging, and informative content that helps our readers stay updated with the latest trends and developments.</p>
+                </div>
+                <div class="col-md-6">
+                  <p>Whether you're looking for technical insights, lifestyle tips, or creative inspiration, we strive to be your go-to resource for quality content that matters.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What We Offer -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h2 class="fw-bold text-center mb-5">What We Offer</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <div class="feature-icon">
+                <i>📚</i>
+              </div>
+              <h4 class="fw-bold">Quality Content</h4>
+              <p class="text-muted">Well-researched articles written by experts in their respective fields, ensuring accuracy and depth.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <div class="feature-icon">
+                <i>🔄</i>
+              </div>
+              <h4 class="fw-bold">Regular Updates</h4>
+              <p class="text-muted">Fresh content published regularly to keep you informed about the latest trends and developments.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <div class="feature-icon">
+                <i>💬</i>
+              </div>
+              <h4 class="fw-bold">Community</h4>
+              <p class="text-muted">A platform for discussion and engagement where readers can share their thoughts and ideas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Our Team -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h2 class="fw-bold text-center mb-5">Our Team</h2>
+        </div>
+        <div class="col-md-4">
+          <div class="team-member">
+            <div class="feature-icon">
+              <i>👨‍💼</i>
+            </div>
+            <h4>John Doe</h4>
+            <p class="text-muted">Founder & Editor</p>
+            <p>With over 10 years of experience in content creation and digital marketing.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="team-member">
+            <div class="feature-icon">
+              <i>👩‍💻</i>
+            </div>
+            <h4>Jane Smith</h4>
+            <p class="text-muted">Content Manager</p>
+            <p>Passionate about storytelling and creating engaging content for our readers.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="team-member">
+            <div class="feature-icon">
+              <i>👨‍🎨</i>
+            </div>
+            <h4>Mike Johnson</h4>
+            <p class="text-muted">Creative Director</p>
+            <p>Ensuring our content is not just informative but also visually appealing.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-5 text-center">
+              <h2 class="fw-bold mb-4">Get In Touch</h2>
+              <p class="text-muted mb-4">We'd love to hear from you! Whether you have questions, suggestions, or just want to say hello.</p>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <strong>Email:</strong><br>
+                  <a href="mailto:contact@myblog.com" class="text-decoration-none">contact@myblog.com</a>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <strong>Follow Us:</strong><br>
+                  <div class="mt-2">
+                    <a href="#" class="text-decoration-none me-3">Twitter</a>
+                    <a href="#" class="text-decoration-none me-3">Facebook</a>
+                    <a href="#" class="text-decoration-none">Instagram</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Include Footer -->
+  <%- include('footer') %>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

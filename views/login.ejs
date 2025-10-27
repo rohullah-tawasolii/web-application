@@ -9,56 +9,118 @@
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    integrity=""
     crossorigin="anonymous"
   />
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #f8f9fa !important;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+    }
+    
+    .login-form {
+      font-size: 0.9rem;
+    }
+    
+    .login-form .form-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    
+    .login-form .form-control {
+      font-size: 0.85rem;
+      padding: 0.5rem 0.75rem;
+    }
+    
+    .login-form .btn {
+      font-size: 0.9rem;
+      padding: 0.5rem;
+    }
+    
+    .login-form h3 {
+      font-size: 1.5rem;
+    }
+    
+    .login-form .text-muted {
+      font-size: 0.8rem;
+    }
+    
+    .forgot-password {
+      font-size: 0.8rem;
+      text-align: right;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+<body>
+  <%- include('header') %>
+  
+  <main class="main-content">
+    <div class="card shadow-lg p-3 rounded-4 login-form" style="width: 100%; max-width: 380px;">
+      <div class="text-center mb-3">
+        <h3 class="fw-bold">Login</h3>
+        <p class="text-muted">Please sign in to your account</p>
+      </div>
 
-  <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px;">
-    <div class="text-center mb-4">
-      <h3 class="fw-bold">Login</h3>
-      <p class="text-muted">Please sign in to your account</p>
+      <!-- Login Form -->
+      <form action="/auth/login" method="POST">
+        <% if (typeof error !== 'undefined' && error) { %>
+          <div class="alert alert-danger py-2" style="font-size: 0.8rem;"><%= error %></div>
+        <% } %>
+
+        <% if (typeof success !== 'undefined' && success) { %>
+          <div class="alert alert-success py-2" style="font-size: 0.8rem;"><%= success %></div>
+        <% } %>
+
+        <div class="mb-2">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="text"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="mb-1">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <div class="forgot-password">
+          <a href="/auth/forget-password" class="text-decoration-none">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+
+      <p class="text-center mt-3 mb-0 text-muted">
+        Don't have an account?
+        <a href="/auth/register" class="text-decoration-none">Register</a>
+      </p>
     </div>
+  </main>
 
-    <!-- Login Form -->
-    <form action="/auth/login" method="POST">
-      <% if (typeof error !== "undefined") { %>
-        <div class="alert alert-danger"><%= error %></div>
-      <% } %>
-
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input
-          type="text"
-          class="form-control"
-          id="email"
-          name="email"
-          placeholder="Enter your email"
-          required
-        />
-      </div>
-
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          name="password"
-          placeholder="Enter your password"
-          required
-        />
-      </div>
-
-      <button type="submit" class="btn btn-primary w-100">Login</button>
-    </form>
-
-    <p class="text-center mt-3 mb-0 text-muted">
-      Don’t have an account?
-      <a href="/auth/register" class="text-decoration-none">Register</a>
-    </p>
-  </div>
+  <%- include('footer') %>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

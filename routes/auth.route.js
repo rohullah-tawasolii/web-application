@@ -79,10 +79,10 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
   console.log('Request body:', req.body);
   
-  const { email, password, firstName, lastName } = req.body;
+  const { email, password, firstName, lastName, username } = req.body;
 
   // validation
-  if (!firstName || !lastName || !email || !password) {
+  if (!firstName || !lastName || !email || !password || !username) {
     return res.render('register', { 
       "error": "All fields are required!"
     });
@@ -102,7 +102,8 @@ router.post('/register', async (req, res) => {
         firstName,
         lastName,
         email, 
-        password
+        password,
+        username
       });
       res.redirect("/auth/login")
     }

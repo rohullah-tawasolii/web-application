@@ -1,17 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user.model');
 
-router.get('/', async (req, res) => {
-    var users = await User.findAll({})
-    if (req.query.q){
-        users = await User.findAll({
-            where:{
-                firstName: req.query.q
-            }
-        })
-    }
-    res.render('home', {users})
+router.get('/', (req, res) => {
+  const posts = [
+    { title: 'First Post', image: '/images/1.jpg', content: 'This is the first post.' },
+    { title: 'Second Post', image: '/images/2.jpg', content: 'This is the second post.' },
+    { title: 'Third Post', image: '/images/3.jpg', content: 'This is the third post.' }
+  ];
+
+  res.render('home', { title: 'Shahrakesang.com', posts });
+});
+
+router.get('/about', (req, res) =>{
+    res.render('about',{ title: 'About us'})
 })
 
-module.exports = router
+module.exports = router;

@@ -14,11 +14,30 @@ const User = sequelize.define(
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true,
+      require: true,
+      set(value) {
+        this.setDataValue('email', value ? value.toLowerCase(): '');
+      }
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      require: true,
+      set(value) {
+        this.setDataValue('username', value ? value.toLowerCase(): '');
+      }
+
+    },
+    bio: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
   },    {});
 
