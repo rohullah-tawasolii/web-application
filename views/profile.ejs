@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             min-height: 100vh;
@@ -89,6 +91,25 @@
             border-color: #667eea;
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
         }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -115,8 +136,13 @@
                 <div class="col-md-4 mb-4">
                     <div class="card profile-card">
                         <div class="card-body text-center p-4">
-                            <img src="/images/defult-profile.png" 
+                            <% if (user.profile_image) { %>
+                                <img src="<%= user.profile_image %>" id="profile-picture"
+                                    alt="Profile" class="profile-avatar mb-3">
+                            <% } else { %>
+                                <img src="/images/defult-profile.png" id="profile-picture"
                                  alt="Profile" class="profile-avatar mb-3">
+                            <% } %> 
                             <h4 class="fw-bold mb-1"><%= user.firstName %> <%= user.lastName %></h4>
                             <p class="text-muted mb-2">@<%= user.username %></p>
                             <p class="last-seen mb-3">
@@ -124,7 +150,11 @@
                                 Last seen 2 hours ago
                             </p>
                             
-                            <button class="btn btn-outline-primary btn-sm w-100 mb-3">
+                            <!-- بعد از دکمه Change Photo این خط رو اضافه کن -->
+                            <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+                            
+                            <!-- دکمه رو اینطوری اصلاح کن -->
+                            <button class="btn btn-outline-primary btn-sm w-100 mb-3" id="changePhotoBtn">
                                 <i class="fas fa-camera me-1"></i>
                                 Change Photo
                             </button>
@@ -132,11 +162,7 @@
                             <div class="mt-4">
                                 <h6 class="section-title">Settings</h6>
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-outline-secondary btn-sm text-start">
-                                        <i class="fas fa-key me-2"></i>
-                                        Change Password
-                                    </button>
-                                    <a href="/auth/logout" class="btn btn-outline-danger btn-sm text-start">
+                                    <a href="/user/logout" class="btn btn-outline-danger btn-sm text-start">
                                         <i class="fas fa-sign-out-alt me-2"></i>
                                         Logout
                                     </a>
@@ -202,6 +228,38 @@
                                     </div>
                                 </div>
 
+                                <!-- Password Section -->
+                                <div class="mb-4">
+                                    <h5 class="section-title">Change Password</h5>
+                                    
+                                    <div class="info-item">
+                                        <div class="label">Current Password</div>
+                                        <div class="value">
+                                            <input type="password" class="form-control" 
+                                                name="current_password" 
+                                                placeholder="Enter your current password">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="label">New Password</div>
+                                        <div class="value">
+                                            <input type="password" class="form-control" 
+                                                name="new_password" 
+                                                placeholder="Enter new password">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="label">Confirm New Password</div>
+                                        <div class="value">
+                                            <input type="password" class="form-control" 
+                                                name="confirm_new_password" 
+                                                placeholder="Confirm new password">
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- About Section -->
                                 <div class="mb-4">
                                     <h5 class="section-title">About</h5>
@@ -243,6 +301,41 @@
             </div>
         </div>
     </main>
+
+    <script>
+    // وقتی روی دکمه کلیک شد، فایل input رو فعال کن
+    $("#changePhotoBtn").click(function() {
+        $("#profile-picture-input").click();
+    });
+
+    // کد اصلی شما با اصلاح خط اول
+    $("#profile-picture-input").change(function () {
+        var file = this.files[0]; // اصلاح: this.files[0] نه this.file[0]
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var imagePreview = document.getElementById('profile-picture');
+            imagePreview.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+
+        var formData = new FormData();
+        formData.append('profile_image', file);
+
+        $.ajax({
+            url: '/user/profile', // آدرس رو اصلاح کن
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log("File uploaded successfully.")
+            },
+            error: function (error) {
+                console.error("Error occurred during file upload.")
+            }
+            })
+        })
+    </script>
 
     <!-- Include Footer -->
     <%- include('footer') %>
