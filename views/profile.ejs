@@ -110,6 +110,24 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .nav-tabs .nav-link {
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .alert-auto-close {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -150,10 +168,8 @@
                                 Last seen 2 hours ago
                             </p>
                             
-                            <!-- بعد از دکمه Change Photo این خط رو اضافه کن -->
                             <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
                             
-                            <!-- دکمه رو اینطوری اصلاح کن -->
                             <button class="btn btn-outline-primary btn-sm w-100 mb-3" id="changePhotoBtn">
                                 <i class="fas fa-camera me-1"></i>
                                 Change Photo
@@ -176,107 +192,169 @@
                 <div class="col-md-8">
                     <div class="card profile-card">
                         <div class="card-body p-4">
-                            <form action="/user/profile" method="POST">
-                                <!-- Personal Information Section -->
-                                <div class="mb-4">
-                                    <h5 class="section-title">Personal Information</h5>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="info-item">
-                                                <div class="label">Firstname</div>
-                                                <div class="value">
-                                                    <input type="text" class="form-control" 
-                                                           name="firstName" 
-                                                           value="<%= user.firstName %>" 
-                                                           placeholder="Enter your first name">
+                            <!-- Tab Navigation -->
+                            <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" 
+                                            data-bs-target="#personal" type="button" role="tab">
+                                        <i class="fas fa-user me-2"></i>Personal
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="password-tab" data-bs-toggle="tab" 
+                                            data-bs-target="#password" type="button" role="tab">
+                                        <i class="fas fa-key me-2"></i>Password
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="about-tab" data-bs-toggle="tab" 
+                                            data-bs-target="#about" type="button" role="tab">
+                                        <i class="fas fa-info-circle me-2"></i>About
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="account-tab" data-bs-toggle="tab" 
+                                            data-bs-target="#account" type="button" role="tab">
+                                        <i class="fas fa-cog me-2"></i>Account
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="posts-tab" data-bs-toggle="tab" 
+                                            data-bs-target="#posts" type="button" role="tab">
+                                        <i class="fas fa-file-alt me-2"></i>Posts
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content" id="profileTabsContent">
+                                <!-- Personal Information Tab -->
+                                <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                                    <form action="/user/profile" method="POST">
+                                        <h5 class="section-title">Personal Information</h5>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="info-item">
+                                                    <div class="label">Firstname</div>
+                                                    <div class="value">
+                                                        <input type="text" class="form-control" 
+                                                               name="firstName" 
+                                                               value="<%= user.firstName %>" 
+                                                               placeholder="Enter your first name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="info-item">
+                                                    <div class="label">Lastname</div>
+                                                    <div class="value">
+                                                        <input type="text" class="form-control" 
+                                                               name="lastName" 
+                                                               value="<%= user.lastName %>" 
+                                                               placeholder="Enter your last name">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="info-item">
-                                                <div class="label">Lastname</div>
-                                                <div class="value">
-                                                    <input type="text" class="form-control" 
-                                                           name="lastName" 
-                                                           value="<%= user.lastName %>" 
-                                                           placeholder="Enter your last name">
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="info-item">
+                                                    <div class="label">Email</div>
+                                                    <div class="value">
+                                                        <input type="email" class="form-control-plaintext" 
+                                                               value="<%= user.email %>" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="info-item">
+                                                    <div class="label">Username</div>
+                                                    <div class="value">
+                                                        <input type="text" class="form-control-plaintext" 
+                                                               value="<%= user.username %>" readonly>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="info-item">
-                                                <div class="label">Email</div>
-                                                <div class="value">
-                                                    <input type="email" class="form-control-plaintext" 
-                                                           value="<%= user.email %>" readonly>
-                                                </div>
-                                            </div>
+
+                                        <div class="text-end mt-4">
+                                            <button type="submit" class="btn btn-edit">
+                                                <i class="fas fa-save me-2"></i>
+                                                Save Changes
+                                            </button>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="info-item">
-                                                <div class="label">Username</div>
-                                                <div class="value">
-                                                    <input type="text" class="form-control-plaintext" 
-                                                           value="<%= user.username %>" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
 
-                                <!-- Password Section -->
-                                <div class="mb-4">
-                                    <h5 class="section-title">Change Password</h5>
-                                    
-                                    <div class="info-item">
-                                        <div class="label">Current Password</div>
-                                        <div class="value">
-                                            <input type="password" class="form-control" 
-                                                name="current_password" 
-                                                placeholder="Enter your current password">
+                                <!-- Password Tab -->
+                                <div class="tab-pane fade" id="password" role="tabpanel">
+                                    <form action="/user/profile" method="POST">
+                                        <h5 class="section-title">Change Password</h5>
+                                        
+                                        <div class="info-item">
+                                            <div class="label">Current Password</div>
+                                            <div class="value">
+                                                <input type="password" class="form-control" 
+                                                    name="current_password" 
+                                                    placeholder="Enter your current password">
+                                            </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="info-item">
-                                        <div class="label">New Password</div>
-                                        <div class="value">
-                                            <input type="password" class="form-control" 
-                                                name="new_password" 
-                                                placeholder="Enter new password">
+                                        
+                                        <div class="info-item">
+                                            <div class="label">New Password</div>
+                                            <div class="value">
+                                                <input type="password" class="form-control" 
+                                                    name="new_password" 
+                                                    placeholder="Enter new password">
+                                            </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="info-item">
-                                        <div class="label">Confirm New Password</div>
-                                        <div class="value">
-                                            <input type="password" class="form-control" 
-                                                name="confirm_new_password" 
-                                                placeholder="Confirm new password">
+                                        
+                                        <div class="info-item">
+                                            <div class="label">Confirm New Password</div>
+                                            <div class="value">
+                                                <input type="password" class="form-control" 
+                                                    name="confirm_new_password" 
+                                                    placeholder="Confirm new password">
+                                            </div>
                                         </div>
-                                    </div>
+
+                                        <div class="text-end mt-4">
+                                            <button type="submit" class="btn btn-edit">
+                                                <i class="fas fa-save me-2"></i>
+                                                Update Password
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
 
-                                <!-- About Section -->
-                                <div class="mb-4">
-                                    <h5 class="section-title">About</h5>
-                                    <div class="info-item">
-                                        <div class="label">My Bio</div>
-                                        <div class="value">
-                                            <textarea class="form-control" name="bio" rows="3" 
-                                                      placeholder="Tell us something about yourself..."><%= user.bio || '' %></textarea>
-                                            <% if (!user.bio) { %>
-                                                <small class="text-muted">No bio added yet. Write something about yourself!</small>
-                                            <% } %>
+                                <!-- About Tab -->
+                                <div class="tab-pane fade" id="about" role="tabpanel">
+                                    <form action="/user/profile" method="POST">
+                                        <h5 class="section-title">About</h5>
+                                        <div class="info-item">
+                                            <div class="label">My Bio</div>
+                                            <div class="value">
+                                                <textarea class="form-control" name="bio" rows="3" style="max-height: 150px; resize: vertical;"
+                                                        placeholder="Tell us something about yourself..."><%= user.bio || '' %></textarea>
+                                                <% if (!user.bio) { %>
+                                                    <small class="text-muted">No bio added yet. Write something about yourself!</small>
+                                                <% } %>
+                                            </div>
                                         </div>
-                                    </div>
+
+                                        <div class="text-end mt-4">
+                                            <button type="submit" class="btn btn-edit">
+                                                <i class="fas fa-save me-2"></i>
+                                                Save Bio
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
 
-                                <!-- Additional Information -->
-                                <div class="mb-4">
+                                <!-- Account Information Tab -->
+                                <div class="tab-pane fade" id="account" role="tabpanel">
                                     <h5 class="section-title">Account Information</h5>
                                     <div class="info-item">
                                         <div class="label">Member Since</div>
@@ -286,15 +364,97 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Posts Tab -->
+                                <div class="tab-pane fade" id="posts" role="tabpanel">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h5 class="section-title mb-0">My Posts</h5>
+                                        <a href="/user/posts/create" class="btn btn-edit btn-sm">
+                                            <i class="fas fa-plus me-1"></i>Add New Post
+                                        </a>
+                                    </div>
 
-                                <!-- Save Button -->
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-edit btn-lg px-4">
-                                        <i class="fas fa-save me-2"></i>
-                                        Save Changes
-                                    </button>
+                                    <div id="posts-container">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Title</th>
+                                                        <th>Date of Publish</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="posts-tbody">
+                                                    <% if (posts && posts.length > 0) { %>
+                                                        <% posts.forEach(post => { %>
+                                                            <tr data-post-id="<%= post.id %>">
+                                                                <td class="align-middle">
+                                                                    <strong><%= post.title %></strong>
+                                                                </td>
+                                                                <td class="align-middle">
+                                                                    <%= new Date(post.createdAt).toLocaleDateString('en-US', { 
+                                                                        year: 'numeric', 
+                                                                        month: 'long', 
+                                                                        day: 'numeric' 
+                                                                    }) %>
+                                                                </td>
+                                                                <td class="align-middle">
+                                                                    <div class="btn-group btn-group-sm">
+                                                                        <a href="/user/posts/edit/<%= post.id %>" class="btn btn-primary">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </a>
+                                                                        <button class="btn btn-danger delete-post-btn" 
+                                                                                data-post-id="<%= post.id %>" 
+                                                                                data-post-title="<%= post.title %>">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        <% }) %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="3" class="text-center text-muted py-4">
+                                                                <i class="fas fa-file-alt fa-2x mb-2"></i><br>
+                                                                No posts yet. <a href="/user/posts/create">Create your first post!</a>
+                                                            </td>
+                                                        </tr>
+                                                    <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Pagination -->
+                                        <% if (totalPages > 1) { %>
+                                            <nav aria-label="Posts pagination">
+                                                <ul class="pagination justify-content-center">
+                                                    <!-- دکمه Previous -->
+                                                    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                                        <a class="page-link" href="?page=<%= currentPage - 1 %>#posts" tabindex="<%= currentPage === 1 ? '-1' : '' %>">
+                                                            Previous
+                                                        </a>
+                                                    </li>
+                                                    
+                                                    <!-- صفحات -->
+                                                    <% for (let i = 1; i <= totalPages; i++) { %>
+                                                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                            <a class="page-link" href="?page=<%= i %>#posts">
+                                                                <%= i %>
+                                                            </a>
+                                                        </li>
+                                                    <% } %>
+                                                    
+                                                    <!-- دکمه Next -->
+                                                    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                        <a class="page-link" href="?page=<%= currentPage + 1 %>#posts">
+                                                            Next
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        <% } %>
+                                    </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -303,38 +463,162 @@
     </main>
 
     <script>
-    // وقتی روی دکمه کلیک شد، فایل input رو فعال کن
-    $("#changePhotoBtn").click(function() {
-        $("#profile-picture-input").click();
-    });
-
-    // کد اصلی شما با اصلاح خط اول
-    $("#profile-picture-input").change(function () {
-        var file = this.files[0]; // اصلاح: this.files[0] نه this.file[0]
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var imagePreview = document.getElementById('profile-picture');
-            imagePreview.src = e.target.result;
+    $(document).ready(function() {
+        // نمایش تب posts وقتی hash در URL وجود دارد
+        if (window.location.hash === '#posts') {
+            $('#posts-tab').tab('show');
         }
-        reader.readAsDataURL(file);
 
-        var formData = new FormData();
-        formData.append('profile_image', file);
+        // تابع دریافت صفحه جاری از URL
+        function getCurrentPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return parseInt(urlParams.get('page')) || 1;
+        }
 
-        $.ajax({
-            url: '/user/profile', // آدرس رو اصلاح کن
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                console.log("File uploaded successfully.")
-            },
-            error: function (error) {
-                console.error("Error occurred during file upload.")
+        // مدیریت تغییر عکس پروفایل
+        $("#changePhotoBtn").click(function() {
+            $("#profile-picture-input").click();
+        });
+
+        $("#profile-picture-input").change(function () {
+            var file = this.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var imagePreview = document.getElementById('profile-picture');
+                imagePreview.src = e.target.result;
             }
-            })
-        })
+            reader.readAsDataURL(file);
+
+            var formData = new FormData();
+            formData.append('profile_image', file);
+
+            $.ajax({
+                url: '/user/profile',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    showGlobalAlert('Profile picture updated successfully!', 'success');
+                },
+                error: function (error) {
+                    showGlobalAlert('Error updating profile picture!', 'danger');
+                }
+            });
+        });
+
+        // مدیریت حذف پست‌ها - نسخه اصلاح شده
+        $(document).on('click', '.delete-post-btn', function(e) {
+            e.preventDefault();
+            
+            const postId = $(this).data('post-id');
+            const postTitle = $(this).data('post-title');
+            const currentPage = getCurrentPage(); // دریافت صفحه جاری
+            
+            if (confirm(`Are you sure you want to delete the post "${postTitle}"?`)) {
+                const row = $(this).closest('tr');
+                
+                row.html(`
+                    <td colspan="3" class="text-center py-3">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                            <span class="visually-hidden">Deleting...</span>
+                        </div>
+                        <span class="ms-2 text-muted">Deleting post...</span>
+                    </td>
+                `);
+                
+                // درخواست DELETE به مسیر تعریف شده در سرور
+                $.ajax({
+                    url: '/user/posts/delete/' + postId,
+                    type: 'DELETE',
+                    success: function(response) {
+                        if (response && response.success) {
+                            row.fadeOut(400, function() {
+                                $(this).remove();
+                                
+                                // بررسی اگر صفحه خالی شده و آخرین پست صفحه بوده
+                                const remainingPosts = $('#posts-tbody tr[data-post-id]').length;
+                                
+                                if (remainingPosts === 0) {
+                                    // اگر این آخرین پست صفحه بود و صفحه اول نیست، به صفحه قبل برو
+                                    if (currentPage > 1) {
+                                        setTimeout(() => {
+                                            window.location.href = `/user/profile?page=${currentPage - 1}#posts`;
+                                        }, 800);
+                                    } else {
+                                        // اگر صفحه اول است و پستی نیست، فقط رفرش کن
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 800);
+                                    }
+                                }
+                                // اگر هنوز پست‌های دیگری در صفحه وجود دارد، فقط پیام نشان بده
+                                else {
+                                    showGlobalAlert('Post deleted successfully!', 'success');
+                                }
+                            });
+                        } else {
+                            throw new Error(response?.error || 'Failed to delete post');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Delete error:', error);
+                        const errorMsg = xhr.responseJSON ? xhr.responseJSON.error : 
+                                       'Server error occurred';
+                        
+                        // برگرداندن ردیف در صورت خطا
+                        row.html(`
+                            <td class="align-middle"><strong>${postTitle}</strong></td>
+                            <td class="align-middle">Error</td>
+                            <td class="align-middle">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="/posts/edit/${postId}" class="btn btn-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-danger delete-post-btn" data-post-id="${postId}" data-post-title="${postTitle}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        `);
+                        showGlobalAlert('Error: ' + errorMsg, 'danger');
+                    }
+                });
+            }
+        });
+
+        // مدیریت صفحه‌بندی
+        $(document).on('click', '.pagination .page-link', function(e) {
+            e.preventDefault();
+            const pageUrl = $(this).attr('href');
+            window.location.href = pageUrl;
+        });
+
+        // تابع نمایش پیام
+        function showGlobalAlert(message, type) {
+            $('.alert-auto-close').remove();
+            const alertDiv = $(`
+                <div class="alert alert-${type} alert-auto-close alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `);
+            $('body').append(alertDiv);
+            
+            // حذف خودکار پیام بعد از 5 ثانیه
+            setTimeout(() => {
+                alertDiv.alert('close');
+            }, 5000);
+        }
+
+        // مدیریت تب‌ها
+        $('.nav-tabs .nav-link').on('click', function(e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
     </script>
 
     <!-- Include Footer -->

@@ -22,13 +22,18 @@ function generateResetToken(){
   });
 }
 
+// در routeهای login و register
 router.get('/login', (req, res) => {
-  res.render('login')
-})
+  res.render('login', { 
+    error: null 
+  });
+});
 
 router.get('/register', (req, res) => {
-  res.render('register')
-})
+  res.render('register', { 
+    error: null 
+  });
+});
 
 router.get('/forget-password', (req, res) => {
   res.render('forget-password', { error: null, success: null });

@@ -17,11 +17,18 @@ router.get('/', (req, res) => {
     { title: 'Top 10 - Shocking moments', image: '/images/img (12).jpg', content: 'This is the first post.' }
   ];
 
-  res.render('home', { title: 'Shahrakesang.com', posts });
+  // دیگر نیازی به پاس دادن user نیست چون در middleware全局 انجام شده
+  res.render('home', { 
+    title: 'Shahrakesang.com', 
+    posts 
+  });
 });
 
-router.get('/about', (req, res) =>{
-    res.render('about',{ title: 'About us'})
-})
+router.get('/about', (req, res) => {
+  // دیگر نیازی به پاس دادن user نیست چون در middleware全局 انجام شده
+  res.render('about', { 
+    title: 'About us' 
+  });
+});
 
 module.exports = router;
