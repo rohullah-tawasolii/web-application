@@ -3,55 +3,643 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><%= title || "My Blog" %></title>
+  <title><%= title || "Home - Shahrakesang.com" %></title>
+
+  <!-- Bootstrap -->
   <link 
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
-    rel="stylesheet"
-  >
+    rel="stylesheet">
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     body {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background-color: #f8f9fa !important;
+      background-color: #f8f9fa;
     }
-    
     .main-content {
       flex: 1;
+    }
+    
+    /* Post Card Styling */
+    .post-card {
+      border-radius: 16px;
+      border: 1px solid #e0e0e0;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      cursor: pointer;
+    }
+    
+    .post-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Different heights for text vs image posts */
+    .post-card.text-post {
+      min-height: 280px;
+    }
+    
+    .post-card.image-post {
+      min-height: 400px;
+    }
+    
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 16px 16px 0;
+    }
+    
+    .post-author {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .post-author img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    .author-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .author-name {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+    
+    .author-username {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .post-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .subscribe-btn {
+      background-color: #000;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .subscribe-btn:hover {
+      background-color: #333;
+    }
+    
+    .subscribe-btn.subscribed {
+      background-color: #f0f0f0;
+      color: #000;
+    }
+    
+    .subscribe-btn.subscribed:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .three-dots {
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #666;
+      cursor: pointer;
+    }
+    
+    .post-content {
+      padding: 12px 16px;
+      flex: 1;
+    }
+    
+    .post-title {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    
+    .post-text {
+      color: #333;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .hashtag {
+      color: #1d9bf0;
+      font-weight: 500;
+    }
+    
+    .post-image {
+      width: 100%;
+      border-radius: 12px;
+      margin-top: 8px;
+      object-fit: cover;
+      max-height: 300px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    
+    .post-image:hover {
+      opacity: 0.9;
+    }
+    
+    .post-footer {
+      padding: 12px 16px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      border-top: 1px solid #f0f0f0;
+    }
+    
+    .post-date {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .post-stats {
+      display: flex;
+      gap: 16px;
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #666;
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .stat-item i {
+      font-size: 16px;
+    }
+    
+    .stat-item.liked i {
+      color: #f91880 !important;
+    }
+    
+    .stat-item.liked {
+      color: #f91880;
+    }
+    
+    .stat-item.saved i {
+      color: #000 !important;
+    }
+    
+    .stat-item.saved {
+      color: #000;
+    }
+    
+    /* Masonry layout for irregular grid */
+    .posts-container {
+      column-count: 3;
+      column-gap: 1.5rem;
+    }
+    
+    @media (max-width: 992px) {
+      .posts-container {
+        column-count: 2;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .posts-container {
+        column-count: 1;
+      }
+    }
+    
+    .post-item {
+      break-inside: avoid;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Image Popup Modal */
+    .image-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .image-popup.active {
+      display: flex;
+      opacity: 1;
+    }
+    
+    .popup-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .popup-image {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    
+    .close-popup {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .close-popup:hover {
+      color: #ccc;
+    }
+    
+    .popup-navigation {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+      padding: 0 20px;
+    }
+    
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .nav-btn.hidden {
+      display: none;
+    }
+    
+    footer {
+      background: #222;
+      color: #bbb;
+      text-align: center;
+      padding: 15px 0;
+      margin-top: auto;
     }
   </style>
 </head>
 <body>
 
+  <!-- Header -->
   <%- include('header') %>
 
   <!-- Main Content -->
   <main class="main-content">
     <div class="container my-5">
+
       <div class="text-center mb-5">
-        <h2 class="fw-bold">Welcome to My Blog</h2>
-        <p class="text-muted">Your source for interesting articles and insights.</p>
+        <h2 class="fw-bold">Explore the Latest Posts</h2>
+        <p class="text-muted">Discover ideas, stories, and more from our amazing community.</p>
       </div>
 
-      <div class="row g-4">
-        <% posts.forEach(post => { %>
-          <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
-              <img src="<%= post.image %>" class="card-img-top" alt="<%= post.title %>">
-              <div class="card-body">
-                <h5 class="card-title fw-semibold"><%= post.title %></h5>
-                <p class="card-text text-muted"><%= post.description %></p>
-                <a href="/post/<%= post.id %>" class="btn btn-primary">Read More</a>
+      <% if (posts && posts.length > 0) { %>
+        <div class="posts-container">
+          <% posts.forEach(post => { %>
+            <div class="post-item">
+              <div class="card post-card <%= post.image ? 'image-post' : 'text-post' %>" onclick="openPostPage('<%= post.id %>')">
+                <!-- Post Header -->
+                <div class="post-header">
+                  <div class="post-author">
+                    <img src="<%= post.User.profile_image || '/images/default-avatar.png' %>" alt="<%= post.User.username %>">
+                    <div class="author-info">
+                      <div class="author-name"><%= post.User.full_name || post.User.username %></div>
+                      <div class="author-username">@<%= post.User.username %></div>
+                    </div>
+                  </div>
+                  <div class="post-actions">
+                    <button class="subscribe-btn" data-subscribed="false" onclick="event.stopPropagation()">Subscribe</button>
+                    <button class="three-dots" onclick="event.stopPropagation()">⋯</button>
+                  </div>
+                </div>
+                
+                <!-- Post Content -->
+                <div class="post-content">
+                  <div class="post-title"><%= post.title %></div>
+                  <div class="post-text">
+                    <%= post.content.slice(0, 150) %>
+                    <% if (post.content.length > 150) { %>...<% } %>
+                  </div>
+                  
+                  <!-- Hashtags -->
+                  <% if (post.tags && post.tags.length > 0) { %>
+                    <div class="hashtag">
+                      <% post.tags.forEach(tag => { %>#<%= tag.name %> <% }) %>
+                    </div>
+                  <% } %>
+                  
+                  <!-- Post Image -->
+                  <% if (post.image) { %>
+                    <img src="<%= post.image %>" alt="Post image" class="post-image" 
+                         data-post-id="<%= post.id %>" onclick="event.stopPropagation(); openImagePopup(this)">
+                  <% } %>
+                </div>
+                
+                <!-- Post Footer -->
+                <div class="post-footer">
+                  <div class="post-date">
+                    <% const postDate = new Date(post.createdAt || post.updatedAt); %>
+                    <%= postDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %> • 
+                    <%= postDate.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %> • 
+                    <%= post.views ? (post.views > 1000 ? (post.views/1000).toFixed(1) + 'K' : post.views) : '0' %> Views
+                  </div>
+                  <div class="post-stats">
+                    <div class="stat-item like-btn" data-liked="false" onclick="event.stopPropagation()">
+                      <i class="far fa-heart"></i>
+                      <span><%= post.likes_count || 0 %></span>
+                    </div>
+                    <div class="stat-item" onclick="event.stopPropagation()">
+                      <i class="far fa-comment"></i>
+                      <span><%= post.comments_count || 0 %></span>
+                    </div>
+                    <div class="stat-item save-btn" data-saved="false" onclick="event.stopPropagation()">
+                      <i class="far fa-bookmark"></i>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        <% }) %>
-      </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="text-center py-5">
+          <img src="/images/empty.png" alt="No Posts" style="width: 200px; opacity: 0.5;">
+          <h5 class="text-muted mt-3">No posts yet. Be the first to share something!</h5>
+        </div>
+      <% } %>
     </div>
   </main>
 
-  <%- include('footer') %>
-  
+  <!-- Image Popup Modal -->
+  <div class="image-popup" id="imagePopup">
+    <div class="popup-content">
+      <button class="close-popup" onclick="closeImagePopup()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="popup-navigation">
+        <button class="nav-btn prev-btn" onclick="navigateImage(-1)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="nav-btn next-btn" onclick="navigateImage(1)">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <img src="" alt="Enlarged post image" class="popup-image" id="popupImage">
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Open post detail page
+    function openPostPage(postId) {
+      window.location.href = `/post/${postId}`;
+    }
+
+    let currentPostImages = [];
+    let currentImageIndex = 0;
+    let currentPostId = null;
+
+    // Open image popup for specific post
+    function openImagePopup(imgElement) {
+      const postId = imgElement.getAttribute('data-post-id');
+      const popup = document.getElementById('imagePopup');
+      const popupImage = document.getElementById('popupImage');
+      const prevBtn = document.querySelector('.prev-btn');
+      const nextBtn = document.querySelector('.next-btn');
+      
+      // Get all images from the same post
+      currentPostImages = Array.from(document.querySelectorAll(`.post-image[data-post-id="${postId}"]`));
+      currentPostId = postId;
+      
+      // Find the clicked image index
+      currentImageIndex = currentPostImages.findIndex(img => img === imgElement);
+      
+      if (currentImageIndex !== -1) {
+        popupImage.src = currentPostImages[currentImageIndex].src;
+        popup.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Show/hide navigation buttons based on number of images
+        if (currentPostImages.length <= 1) {
+          prevBtn.classList.add('hidden');
+          nextBtn.classList.add('hidden');
+        } else {
+          prevBtn.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+        }
+      }
+    }
+
+    // Close image popup
+    function closeImagePopup() {
+      const popup = document.getElementById('imagePopup');
+      popup.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      currentPostImages = [];
+      currentImageIndex = 0;
+      currentPostId = null;
+    }
+
+    // Navigate between images in the same post
+    function navigateImage(direction) {
+      if (currentPostImages.length <= 1) return;
+      
+      currentImageIndex += direction;
+      
+      if (currentImageIndex < 0) {
+        currentImageIndex = currentPostImages.length - 1;
+      } else if (currentImageIndex >= currentPostImages.length) {
+        currentImageIndex = 0;
+      }
+      
+      document.getElementById('popupImage').src = currentPostImages[currentImageIndex].src;
+    }
+
+    // Close popup on ESC key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeImagePopup();
+      }
+      
+      // Arrow key navigation
+      if (document.getElementById('imagePopup').classList.contains('active')) {
+        if (event.key === 'ArrowLeft') {
+          navigateImage(-1);
+        } else if (event.key === 'ArrowRight') {
+          navigateImage(1);
+        }
+      }
+    });
+
+    // Close popup when clicking on background
+    document.getElementById('imagePopup').addEventListener('click', function(event) {
+      if (event.target === this) {
+        closeImagePopup();
+      }
+    });
+
+    // Like button functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const likeButtons = document.querySelectorAll('.like-btn');
+      
+      likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const isLiked = this.getAttribute('data-liked') === 'true';
+          const heartIcon = this.querySelector('i');
+          const likeCount = this.querySelector('span');
+          
+          if (isLiked) {
+            heartIcon.className = 'far fa-heart';
+            this.setAttribute('data-liked', 'false');
+            likeCount.textContent = parseInt(likeCount.textContent) - 1;
+            this.classList.remove('liked');
+          } else {
+            heartIcon.className = 'fas fa-heart';
+            this.setAttribute('data-liked', 'true');
+            likeCount.textContent = parseInt(likeCount.textContent) + 1;
+            this.classList.add('liked');
+          }
+        });
+      });
+
+      // Subscribe button functionality
+      const subscribeButtons = document.querySelectorAll('.subscribe-btn');
+      
+      subscribeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const isSubscribed = this.getAttribute('data-subscribed') === 'true';
+          
+          if (isSubscribed) {
+            this.textContent = 'Subscribe';
+            this.setAttribute('data-subscribed', 'false');
+            this.classList.remove('subscribed');
+          } else {
+            this.textContent = 'Subscribed';
+            this.setAttribute('data-subscribed', 'true');
+            this.classList.add('subscribed');
+          }
+        });
+      });
+
+      // Save button functionality
+      const saveButtons = document.querySelectorAll('.save-btn');
+      
+      saveButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const isSaved = this.getAttribute('data-saved') === 'true';
+          const bookmarkIcon = this.querySelector('i');
+          
+          if (isSaved) {
+            bookmarkIcon.className = 'far fa-bookmark';
+            this.setAttribute('data-saved', 'false');
+            this.classList.remove('saved');
+          } else {
+            bookmarkIcon.className = 'fas fa-bookmark';
+            this.setAttribute('data-saved', 'true');
+            this.classList.add('saved');
+          }
+        });
+      });
+    });
+  </script>
+
+  <style>
+  /* استایل‌های موجود... */
+
+  .post-author {
+    display: flex;
+    align-items: center; /* این خط مهم است */
+    gap: 12px;
+  }
+  
+  .post-author img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0; /* جلوگیری از تغییر سایز */
+  }
+  
+  .author-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* تراز وسط عمودی */
+  }
+  
+  .author-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+  
+  .author-username {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  /* بقیه استایل‌ها... */
+</style>
+
 </body>
 </html>
